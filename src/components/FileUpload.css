@@ -22,7 +22,6 @@
   font-weight: 600;
 }
 
-/* Dosya Yükleme Alanı */
 .file-drop-zone {
   border: 2px dashed #cbd5e0;
   border-radius: 12px;
@@ -89,7 +88,6 @@
   margin-top: 0.5rem;
 }
 
-/* Seçilen Dosya */
 .file-selected {
   display: flex;
   align-items: center;
@@ -140,7 +138,6 @@
   transform: scale(1.1);
 }
 
-/* Dil Seçimi */
 .language-selection {
   margin-bottom: 2rem;
 }
@@ -224,7 +221,6 @@
   font-size: 1.2rem;
 }
 
-/* Başarı Mesajı */
 .success-message {
   background: #d4edda;
   border: 1px solid #c3e6cb;
@@ -264,7 +260,6 @@
   color: #155724;
 }
 
-/* Hata Mesajı */
 .error-message {
   background: #f8d7da;
   border: 1px solid #f5c6cb;
@@ -293,7 +288,6 @@
   margin: 0;
 }
 
-/* Loading Spinner */
 .loading-spinner {
   animation: spin 1s linear infinite;
 }
@@ -307,7 +301,6 @@
   }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .file-upload-card {
     margin: 1rem;

@@ -76,7 +76,6 @@ const FileUpload: React.FC<FileUploadProps> = () => {
       if (response.status === 202) {
         setUploadResult(response.data)
         setSelectedFile(null)
-        // Reset file input
         const fileInput = document.getElementById('file-input') as HTMLInputElement
         if (fileInput) {
           fileInput.value = ''
@@ -135,7 +134,6 @@ const FileUpload: React.FC<FileUploadProps> = () => {
           </div>
         )}
         
-        {/* Dosya Yükleme Alanı */}
         <div 
           className={`file-drop-zone ${dragActive ? 'drag-active' : ''}`}
           onDragEnter={handleDrag}
@@ -209,7 +207,6 @@ const FileUpload: React.FC<FileUploadProps> = () => {
           </div>
         </div>
 
-        {/* Gönder Butonu */}
         <button
           type="button"
           onClick={handleSubmit}
