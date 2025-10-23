@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { CodeIssue } from '@/services/TurkishCodeAnalyzer'
+import { FiX, FiChevronRight, FiSettings, FiList, FiTarget, FiZap, FiMapPin, FiAlertCircle, FiAlertTriangle, FiInfo, FiTag, FiSearch, FiCheck } from 'react-icons/fi'
 import './CodeComparison.css'
 
 interface CodeComparisonProps {
@@ -9,6 +10,16 @@ interface CodeComparisonProps {
 
 const CodeComparison: React.FC<CodeComparisonProps> = ({ issue, onClose }) => {
   const [activeTab, setActiveTab] = useState<'explanation' | 'comparison' | 'fix'>('explanation')
+
+  const formatCodeWithLineNumbers = (code: string, startLine: number = 1) => {
+    const lines = code.split('\n')
+    return lines.map((line, index) => (
+      <div key={index} className="code-line">
+        <span className="line-number">{startLine + index}</span>
+        <span className="line-content">{line || ' '}</span>
+      </div>
+    ))
+  }
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -21,26 +32,34 @@ const CodeComparison: React.FC<CodeComparisonProps> = ({ issue, onClose }) => {
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
-      case 'error': return '🚨'
-      case 'warning': return '⚠️'
-      case 'info': return '💡'
-      default: return '📝'
+      case 'error': return <FiAlertCircle />
+      case 'warning': return <FiAlertTriangle />
+      case 'info': return <FiInfo />
+      default: return <FiInfo />
+    }
+  }
+
+  const getSeverityTurkish = (severity: string) => {
+    switch (severity) {
+      case 'error': return 'HATA'
+      case 'warning': return 'UYARI'
+      case 'info': return 'BİLGİ'
+      default: return 'BİLGİ'
     }
   }
 
   return (
     <div className="code-comparison-overlay">
       <div className="code-comparison-modal">
-        {/* Header Section */}
         <div className="comparison-header">
           <div className="header-left">
             <div className="issue-badge" style={{ backgroundColor: getSeverityColor(issue.severity) }}>
               {getSeverityIcon(issue.severity)}
-              <span>{issue.severity.toUpperCase()}</span>
+              <span>{getSeverityTurkish(issue.severity)}</span>
             </div>
             <div className="issue-details">
               <h2 className="issue-title">{issue.code}</h2>
-              <p className="issue-location">📍 Satır {issue.line}:{issue.column}</p>
+              <p className="issue-location"><FiMapPin /> Satır {issue.line}:{issue.column}</p>
             </div>
           </div>
           <button onClick={onClose} className="close-btn">
@@ -50,43 +69,41 @@ const CodeComparison: React.FC<CodeComparisonProps> = ({ issue, onClose }) => {
           </button>
         </div>
 
-        {/* Navigation Tabs */}
         <div className="comparison-nav">
           <button 
             className={`nav-item ${activeTab === 'explanation' ? 'active' : ''}`}
             onClick={() => setActiveTab('explanation')}
           >
-            <span className="nav-icon">📖</span>
+            <span className="nav-icon"><FiZap /></span>
             <span>Açıklama</span>
           </button>
           <button 
             className={`nav-item ${activeTab === 'comparison' ? 'active' : ''}`}
             onClick={() => setActiveTab('comparison')}
           >
-            <span className="nav-icon">🔄</span>
+            <span className="nav-icon"><FiChevronRight /></span>
             <span>Karşılaştırma</span>
           </button>
-          <button 
-            className={`nav-item ${activeTab === 'fix' ? 'active' : ''}`}
-            onClick={() => setActiveTab('fix')}
-          >
-            <span className="nav-icon">🔧</span>
-            <span>Çözüm</span>
-          </button>
+            <button 
+              className={`nav-item ${activeTab === 'fix' ? 'active' : ''}`}
+              onClick={() => setActiveTab('fix')}
+            >
+              <span className="nav-icon"><FiSettings /></span>
+              <span>Çözüm</span>
+            </button>
         </div>
 
-        {/* Content Area */}
         <div className="comparison-content">
           {activeTab === 'explanation' && (
             <div className="explanation-section">
               <div className="section-header">
-                <h3>🔍 Sorun Detayları</h3>
+                <h3><FiSearch /> Sorun Detayları</h3>
                 <div className="section-divider"></div>
               </div>
               
               <div className="info-cards">
                 <div className="info-card">
-                  <div className="card-icon">🏷️</div>
+                  <div className="card-icon"><FiTag /></div>
                   <div className="card-content">
                     <h4>Hata Kodu</h4>
                     <p>{issue.code}</p>
@@ -94,7 +111,7 @@ const CodeComparison: React.FC<CodeComparisonProps> = ({ issue, onClose }) => {
                 </div>
                 
                 <div className="info-card">
-                  <div className="card-icon">📝</div>
+                  <div className="card-icon"><FiZap /></div>
                   <div className="card-content">
                     <h4>Açıklama</h4>
                     <p>{issue.turkishExplanation}</p>
@@ -102,15 +119,7 @@ const CodeComparison: React.FC<CodeComparisonProps> = ({ issue, onClose }) => {
                 </div>
                 
                 <div className="info-card">
-                  <div className="card-icon">💬</div>
-                  <div className="card-content">
-                    <h4>Mesaj</h4>
-                    <p>{issue.message}</p>
-                  </div>
-                </div>
-                
-                <div className="info-card">
-                  <div className="card-icon">📍</div>
+                  <div className="card-icon"><FiMapPin /></div>
                   <div className="card-content">
                     <h4>Konum</h4>
                     <p>Satır {issue.line}, Sütun {issue.column}</p>
@@ -123,7 +132,7 @@ const CodeComparison: React.FC<CodeComparisonProps> = ({ issue, onClose }) => {
           {activeTab === 'comparison' && (
             <div className="comparison-section">
               <div className="section-header">
-                <h3>🔄 Kod Karşılaştırması</h3>
+                <h3><FiChevronRight /> Kod Karşılaştırması</h3>
                 <div className="section-divider"></div>
               </div>
               
@@ -131,14 +140,16 @@ const CodeComparison: React.FC<CodeComparisonProps> = ({ issue, onClose }) => {
                 <div className="code-card bad-code-card">
                   <div className="code-card-header">
                     <div className="code-status bad">
-                      <span className="status-icon">❌</span>
+                      <span className="status-icon"><FiX /></span>
                       <span>Yanlış Kod</span>
                     </div>
                     <div className="code-location">Satır {issue.line}</div>
                   </div>
                   <div className="code-content">
                     <pre className="code-block">
-                      <code>{issue.badExample}</code>
+                      <code>
+                        {formatCodeWithLineNumbers(issue.badExample, issue.line)}
+                      </code>
                     </pre>
                   </div>
                 </div>
@@ -152,14 +163,16 @@ const CodeComparison: React.FC<CodeComparisonProps> = ({ issue, onClose }) => {
                 <div className="code-card good-code-card">
                   <div className="code-card-header">
                     <div className="code-status good">
-                      <span className="status-icon">✅</span>
+                      <span className="status-icon"><FiCheck /></span>
                       <span>Doğru Kod</span>
                     </div>
                     <div className="code-location">Düzeltilmiş</div>
                   </div>
                   <div className="code-content">
                     <pre className="code-block">
-                      <code>{issue.goodExample}</code>
+                      <code>
+                        {formatCodeWithLineNumbers(issue.goodExample, 1)}
+                      </code>
                     </pre>
                   </div>
                 </div>
@@ -170,40 +183,33 @@ const CodeComparison: React.FC<CodeComparisonProps> = ({ issue, onClose }) => {
           {activeTab === 'fix' && (
             <div className="fix-section">
               <div className="section-header">
-                <h3>🔧 Nasıl Düzeltilir?</h3>
+                <h3><FiSettings /> Nasıl Düzeltilir?</h3>
                 <div className="section-divider"></div>
               </div>
               
               <div className="fix-content">
-                <div className="fix-card suggestion-card">
-                  <div className="card-header">
-                    <span className="card-icon">💡</span>
-                    <h4>Önerilen Çözüm</h4>
-                  </div>
-                  <div className="card-body">
-                    <p>{issue.fixSuggestion}</p>
-                  </div>
-                </div>
-                
                 <div className="fix-card steps-card">
                   <div className="card-header">
-                    <span className="card-icon">📋</span>
-                    <h4>Adım Adım</h4>
+                    <span className="card-icon"><FiList /></span>
+                    <h4>Adım Adım Rehber</h4>
                   </div>
                   <div className="card-body">
                     <ol className="steps-list">
-                      <li>Kodunuzu kontrol edin</li>
-                      <li>Belirtilen satırı bulun</li>
-                      <li>Önerilen değişikliği yapın</li>
-                      <li>Kodu tekrar test edin</li>
+                      {issue.fixSuggestion.split('\n').map((step, index) => (
+                        step.trim() && (
+                          <li key={index}>
+                            {step.replace(/^\d+\.\s*/, '')}
+                          </li>
+                        )
+                      ))}
                     </ol>
                   </div>
                 </div>
 
                 <div className="fix-card tips-card">
                   <div className="card-header">
-                    <span className="card-icon">🎯</span>
-                    <h4>İpuçları</h4>
+                    <span className="card-icon"><FiTarget /></span>
+                    <h4>Genel İpuçları</h4>
                   </div>
                   <div className="card-body">
                     <ul className="tips-list">
@@ -219,7 +225,6 @@ const CodeComparison: React.FC<CodeComparisonProps> = ({ issue, onClose }) => {
           )}
         </div>
 
-        {/* Footer */}
         <div className="comparison-footer">
           <button onClick={onClose} className="close-modal-btn">
             <span>Kapat</span>

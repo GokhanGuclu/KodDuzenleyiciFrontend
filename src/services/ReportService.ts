@@ -1,6 +1,7 @@
 import axios from 'axios'
+import TurkishCodeAnalyzer from './TurkishCodeAnalyzer'
 
-const API_BASE_URL = 'http://localhost:5033/api'
+const API_BASE_URL = 'http://localhost:5000/api'
 
 // API Response Types
 export interface ReportSummary {
@@ -20,12 +21,18 @@ export interface Issue {
   line: number
   column: number
   severity: 'error' | 'warning' | 'info'
+  turkishExplanation?: string
+  badExample?: string
+  goodExample?: string
+  fixSuggestion?: string
+  actualCode?: string // Dosyadan gelen gerçek kod satırı
 }
 
 export interface DetailedReport {
   submissionId: string
   language: string
   calculatedAt: string
+  fileContent?: string // Yüklenen dosyanın içeriği
   summary: {
     errors: number
     warnings: number
@@ -55,7 +62,35 @@ export class ReportService {
   static async getReportById(submissionId: string): Promise<DetailedReport> {
     try {
       const response = await axios.get(`${API_BASE_URL}/Reports/${submissionId}`)
-      return response.data
+      const report = response.data
+      
+      // Issues'ları Türkçeleştir ve gerçek kod satırlarını ekle
+      const turkishIssues = report.issues.map((issue: Issue) => {
+        const turkishDetails = TurkishCodeAnalyzer.getIssueDetails(issue.code)
+        
+        // Dosya içeriğinden ilgili satırı çıkar
+        let actualCode = 'Kod satırı bulunamadı'
+        if (report.fileContent) {
+          const lines = report.fileContent.split('\n')
+          if (issue.line > 0 && issue.line <= lines.length) {
+            actualCode = lines[issue.line - 1] || 'Satır bulunamadı'
+          }
+        }
+        
+        return {
+          ...issue,
+          turkishExplanation: turkishDetails.turkishExplanation || issue.message,
+          badExample: turkishDetails.badExample || 'Örnek kod bulunamadı', // Sabit örnek göster
+          goodExample: turkishDetails.goodExample || 'Düzeltilmiş kod bulunamadı',
+          fixSuggestion: turkishDetails.fixSuggestion || 'Kodunuzu kontrol edin',
+          actualCode: actualCode
+        }
+      })
+      
+      return {
+        ...report,
+        issues: turkishIssues
+      }
     } catch (error) {
       console.error('Error fetching report by ID:', error)
       throw error

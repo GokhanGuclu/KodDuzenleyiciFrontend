@@ -15,7 +15,7 @@ export class TurkishCodeAnalyzer {
   // Backend'deki classify_severity fonksiyonuna uygun severity mapping
   static classifySeverity(code: string): string {
     if (!code) return "info"
-    const prefix = code[0].upper()
+    const prefix = code[0].toUpperCase()
     if (prefix === "F" || prefix === "E") return "error"
     else if (prefix === "W") return "warning"
     else if (prefix === "C") return "convention"
@@ -31,19 +31,19 @@ export class TurkishCodeAnalyzer {
         turkishExplanation: 'Indentation hatası - karışık tab ve space kullanımı',
         badExample: 'def func():\n\t    pass',
         goodExample: 'def func():\n    pass',
-        fixSuggestion: 'Tutarlı indentation kullanın (sadece space veya sadece tab)'
+        fixSuggestion: '1. Editörünüzde "Show Whitespace" özelliğini açın\n2. Tab karakterlerini (\t) görün\n3. Tüm tab karakterlerini 4 space ile değiştirin\n4. Gelecekte sadece space kullanın'
       },
       'E111': {
         turkishExplanation: 'Indentation hatası - 4 space yerine farklı sayıda space',
         badExample: 'def func():\n  pass',
         goodExample: 'def func():\n    pass',
-        fixSuggestion: 'Her seviye için 4 space kullanın'
+        fixSuggestion: '1. Hatalı satırı bulun\n2. Satır başındaki space sayısını sayın\n3. Eksik space\'leri ekleyin (toplam 4 olmalı)\n4. Editörünüzde "Tab Size: 4" ayarını yapın'
       },
       'E112': {
         turkishExplanation: 'Beklenen indentation eksik',
         badExample: 'if True:\npass',
         goodExample: 'if True:\n    pass',
-        fixSuggestion: 'Kontrol yapılarından sonra uygun indentation ekleyin'
+        fixSuggestion: '1. if/for/while/def/try/except\'ten sonraki satırları bulun\n2. Bu satırların başına 4 space ekleyin\n3. İç içe bloklar için her seviyede 4 space daha ekleyin\n4. Python\'da indentation zorunludur!'
       },
       'E113': {
         turkishExplanation: 'Indentation hatası - beklenmeyen indent',
@@ -79,7 +79,7 @@ export class TurkishCodeAnalyzer {
         turkishExplanation: 'Parantez öncesi gereksiz boşluk',
         badExample: 'func( )',
         goodExample: 'func()',
-        fixSuggestion: 'Parantez öncesi boşlukları kaldırın'
+        fixSuggestion: '1. Parantez öncesindeki boşluğu silin\n2. Parantez içinde de boşluk varsa onu da silin\n3. Örnek: "func( )" → "func()"\n4. PEP 8\'e göre parantez öncesi boşluk olmamalı'
       },
       'E202': {
         turkishExplanation: 'Parantez sonrası gereksiz boşluk',
@@ -151,7 +151,7 @@ export class TurkishCodeAnalyzer {
         turkishExplanation: 'Virgül sonrası eksik boşluk',
         badExample: 'a,b,c',
         goodExample: 'a, b, c',
-        fixSuggestion: 'Virgül sonrası boşluk ekleyin'
+        fixSuggestion: '1. Virgül karakterini bulun\n2. Virgülün hemen sonrasına bir space ekleyin\n3. Örnek: "a,b,c" → "a, b, c"\n4. Bu kural liste, tuple ve fonksiyon parametreleri için geçerli'
       },
       'E241': {
         turkishExplanation: 'Virgül sonrası gereksiz boşluk',
@@ -229,7 +229,7 @@ export class TurkishCodeAnalyzer {
         turkishExplanation: 'Fonksiyon tanımından önce 2 boş satır olmalı',
         badExample: 'def func1():\n    pass\ndef func2():',
         goodExample: 'def func1():\n    pass\n\n\ndef func2():',
-        fixSuggestion: 'Fonksiyonlar arasına 2 boş satır ekleyin'
+        fixSuggestion: '1. Fonksiyon tanımını bulun\n2. Fonksiyondan önceki satırları sayın\n3. Eksik boş satırları ekleyin (toplam 2 olmalı)\n4. Sınıf tanımları için de aynı kural geçerli'
       },
       'E302': {
         turkishExplanation: 'Fonksiyon tanımından önce 2 boş satır olmalı',
@@ -381,19 +381,13 @@ export class TurkishCodeAnalyzer {
         goodExample: 'try:\n    with open("file.txt") as f:\n        pass\nexcept IOError:\n    pass',
         fixSuggestion: 'Dosya işlemlerinde hata yönetimi yapın'
       },
-      'E999': {
-        turkishExplanation: 'Syntax hatası',
-        badExample: 'def func(\n    pass',
-        goodExample: 'def func():\n    pass',
-        fixSuggestion: 'Syntax hatasını düzeltin'
-      },
 
       // F kodları (pyflakes - kullanılmayan import'lar, tanımlanmamış değişkenler)
       'F401': {
         turkishExplanation: 'İçe aktarılan modül kullanılmıyor',
         badExample: 'import os\nimport sys\nprint("Merhaba")',
         goodExample: 'print("Merhaba")',
-        fixSuggestion: 'Kullanılmayan import\'ları kaldırın'
+        fixSuggestion: '1. Import edilen modülün kodda kullanılıp kullanılmadığını kontrol edin\n2. Kullanılmıyorsa import satırını silin\n3. Gelecekte sadece ihtiyacınız olan modülleri import edin\n4. Bu kod temizliği ve performans için önemli'
       },
       'F402': {
         turkishExplanation: 'Import edilen modül kullanılmıyor',
@@ -599,19 +593,19 @@ export class TurkishCodeAnalyzer {
         turkishExplanation: 'Indentation hatası - tab kullanımı',
         badExample: 'def func():\n\tpass',
         goodExample: 'def func():\n    pass',
-        fixSuggestion: 'Tab yerine space kullanın'
+        fixSuggestion: '1. Editörünüzde "Show Whitespace" özelliğini açın\n2. Tab karakterlerini (\t) görün\n3. Tüm tab karakterlerini 4 space ile değiştirin\n4. Editörünüzde "Convert Tabs to Spaces" ayarını aktifleştirin'
       },
       'W291': {
         turkishExplanation: 'Satır sonunda gereksiz boşluk var',
         badExample: 'x = 5    ',
         goodExample: 'x = 5',
-        fixSuggestion: 'Satır sonundaki boşlukları temizleyin'
+        fixSuggestion: '1. Satır sonundaki boşlukları görün (Show Whitespace açın)\n2. Satır sonundaki tüm space karakterlerini silin\n3. Editörünüzde "Trim Trailing Whitespace" ayarını aktifleştirin\n4. Bu hata genelde kopyala-yapıştır işlemlerinde oluşur'
       },
       'W292': {
         turkishExplanation: 'Dosya sonunda yeni satır karakteri eksik',
         badExample: 'print("Son satır")',
         goodExample: 'print("Son satır")\n',
-        fixSuggestion: 'Dosya sonuna yeni satır karakteri ekleyin'
+        fixSuggestion: '1. Dosyanın son satırını bulun\n2. Son satırın sonuna Enter tuşuna basın\n3. Dosya sonunda boş bir satır oluşmalı\n4. Bu Unix/Linux standartları için zorunludur'
       },
       'W293': {
         turkishExplanation: 'Boş satırda boşluk karakteri var',
@@ -1352,11 +1346,38 @@ export class TurkishCodeAnalyzer {
   // Değerlendirme için Türkçe açıklamalar
   static getEvaluationTurkish(evaluation: string): string {
     const evaluationMap: Record<string, string> = {
-      'Excellent code quality! 🎉': 'Mükemmel kod kalitesi! 🎉',
-      'Good code quality 👍': 'İyi kod kalitesi 👍',
-      'Average code quality ⚠️': 'Orta kod kalitesi ⚠️',
-      'Below average code quality ❌': 'Ortalamanın altında kod kalitesi ❌',
-      'Critical issues ❌': 'Kritik sorunlar ❌'
+      // Backend'den gelen evaluation'lar
+      'Excellent code quality 🟢': 'Mükemmel kod kalitesi',
+      'Very good 🟢': 'Çok iyi',
+      'Good 🟡': 'İyi',
+      'Satisfactory 🟡': 'Yeterli',
+      'Needs improvement 🟠': 'İyileştirme gerekli',
+      'Poor quality 🔴': 'Kötü kalite',
+      'Critical issues ❌': 'Kritik sorunlar',
+      
+      // Eski İngilizce evaluation'lar (geriye uyumluluk için)
+      'Excellent code quality! 🎉': 'Mükemmel kod kalitesi',
+      'Good code quality 👍': 'İyi kod kalitesi',
+      'Average code quality ⚠️': 'Orta kod kalitesi',
+      'Below average code quality ❌': 'Ortalamanın altında kod kalitesi',
+      'Critical issues ❌': 'Kritik sorunlar',
+      
+      // Alternatif İngilizce metinler
+      'Excellent code quality': 'Mükemmel kod kalitesi',
+      'Good code quality': 'İyi kod kalitesi',
+      'Average code quality': 'Orta kod kalitesi',
+      'Below average code quality': 'Ortalamanın altında kod kalitesi',
+      'Critical issues': 'Kritik sorunlar',
+      'Poor code quality': 'Kötü kod kalitesi',
+      'Very good code quality': 'Çok iyi kod kalitesi',
+      'Fair code quality': 'Orta kod kalitesi',
+      
+      // Türkçe metinler (zaten Türkçe ise olduğu gibi döndür)
+      'Mükemmel kod kalitesi! 🎉': 'Mükemmel kod kalitesi',
+      'İyi kod kalitesi 👍': 'İyi kod kalitesi',
+      'Orta kod kalitesi ⚠️': 'Orta kod kalitesi',
+      'Ortalamanın altında kod kalitesi ❌': 'Ortalamanın altında kod kalitesi',
+      'Kritik sorunlar ❌': 'Kritik sorunlar'
     }
     return evaluationMap[evaluation] || evaluation
   }
