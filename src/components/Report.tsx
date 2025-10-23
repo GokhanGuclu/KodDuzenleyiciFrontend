@@ -33,9 +33,10 @@ import './Report.css'
 
 interface ReportProps {
   submissionId: string
+  onBackToUpload?: () => void
 }
 
-const Report: React.FC<ReportProps> = ({ submissionId }) => {
+const Report: React.FC<ReportProps> = ({ submissionId, onBackToUpload }) => {
   const [report, setReport] = useState<DetailedReport | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -310,31 +311,43 @@ const Report: React.FC<ReportProps> = ({ submissionId }) => {
               <FiAlertCircle className="title-icon" />
               Hatalar
             </h2>
-            {viewMode === 'sequential' && (
-              <div className="navigation-bar">
-                <button 
-                  className="nav-button prev" 
-                  onClick={handlePrevIssue}
-                  disabled={currentIssueIndex === 0}
-                >
-                  <span>←</span>
-                  <span>Önceki</span>
-                </button>
-                <div className="issue-counter">
-                  <span className="current">{currentIssueIndex + 1}</span>
-                  <span className="separator">/</span>
-                  <span className="total">{report.issues.length}</span>
+            <div className="header-actions">
+              {viewMode === 'sequential' && (
+                <div className="navigation-bar">
+                  <button 
+                    className="nav-button prev" 
+                    onClick={handlePrevIssue}
+                    disabled={currentIssueIndex === 0}
+                  >
+                    <span>←</span>
+                    <span>Önceki</span>
+                  </button>
+                  <div className="issue-counter">
+                    <span className="current">{currentIssueIndex + 1}</span>
+                    <span className="separator">/</span>
+                    <span className="total">{report.issues.length}</span>
+                  </div>
+                  <button 
+                    className="nav-button next" 
+                    onClick={handleNextIssue}
+                    disabled={currentIssueIndex === report.issues.length - 1}
+                  >
+                    <span>Sonraki</span>
+                    <span>→</span>
+                  </button>
                 </div>
+              )}
+              {onBackToUpload && (
                 <button 
-                  className="nav-button next" 
-                  onClick={handleNextIssue}
-                  disabled={currentIssueIndex === report.issues.length - 1}
+                  className="new-analysis-btn"
+                  onClick={onBackToUpload}
+                  title="Yeni Analiz Başlat"
                 >
-                  <span>Sonraki</span>
-                  <span>→</span>
+                  <FiZap />
+                  <span>Yeni Analiz</span>
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           <div className={`issues-list ${viewMode === 'all' ? 'grid-view' : 'sequential-view'}`}>

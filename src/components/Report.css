@@ -437,6 +437,42 @@
   min-height: 80px;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.new-analysis-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.new-analysis-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.new-analysis-btn:active {
+  transform: translateY(0);
+}
+
+.new-analysis-btn svg {
+  font-size: 16px;
+}
+
 .content-title {
   font-size: 18px;
   font-weight: 600;
@@ -626,7 +662,6 @@
   white-space: pre-line;
 }
 
-/* Sequential Code Comparison - Modal Style */
 .sequential-code-comparison {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -761,7 +796,6 @@
   margin-bottom: 20px;
 }
 
-/* Sequential Content Icons */
 .content-section .content-icon svg {
   margin-right: 8px;
   vertical-align: middle;
@@ -774,15 +808,15 @@
 }
 
 .content-section:nth-child(1) .content-icon svg {
-  color: #10b981; /* Açıklama - Yeşil */
+  color: #10b981;
 }
 
 .content-section:nth-child(2) .content-icon svg {
-  color: #3b82f6; /* Kod Karşılaştırması - Mavi */
+  color: #3b82f6;
 }
 
 .content-section:nth-child(3) .content-icon svg {
-  color: #f59e0b; /* Çözüm - Turuncu */
+  color: #f59e0b; 
 }
 
 .content-section:last-child {

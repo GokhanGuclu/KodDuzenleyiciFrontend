@@ -35,6 +35,10 @@ const FileUpload: React.FC<FileUploadProps> = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
+      if (!file.name.toLowerCase().endsWith('.py')) {
+        setError('Sadece Python dosyaları (.py) yüklenebilir!')
+        return
+      }
       setSelectedFile(file)
       setError(null)
       setUploadResult(null)
@@ -58,7 +62,12 @@ const FileUpload: React.FC<FileUploadProps> = () => {
     setDragActive(false)
     
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setSelectedFile(e.dataTransfer.files[0])
+      const file = e.dataTransfer.files[0]
+      if (!file.name.toLowerCase().endsWith('.py')) {
+        setError('Sadece Python dosyaları (.py) yüklenebilir!')
+        return
+      }
+      setSelectedFile(file)
       setError(null)
       setUploadResult(null)
       setShowReport(false)
@@ -290,7 +299,17 @@ const FileUpload: React.FC<FileUploadProps> = () => {
 
       {showReport && uploadResult && (
         <Report 
-          submissionId={uploadResult.submissionId} 
+          submissionId={uploadResult.submissionId}
+          onBackToUpload={() => {
+            setShowReport(false)
+            setUploadResult(null)
+            setSelectedFile(null)
+            setError(null)
+            const fileInput = document.getElementById('file-input') as HTMLInputElement
+            if (fileInput) {
+              fileInput.value = ''
+            }
+          }}
         />
       )}
     </>

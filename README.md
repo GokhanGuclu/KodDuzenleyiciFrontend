@@ -24,8 +24,7 @@ src/
 │   └── CircularProgressBar.tsx # İlerleme çubuğu
 ├── services/               # Servis katmanı
 │   ├── ReportService.ts    # API servisleri
-│   ├── TurkishCodeAnalyzer.ts # Türkçe hata açıklamaları
-│   └── MockReportService.ts # Test servisi
+│   └── TurkishCodeAnalyzer.ts # Türkçe hata açıklamaları
 ├── App.tsx                 # Ana uygulama bileşeni
 ├── main.tsx               # Uygulama giriş noktası
 └── index.css              # Global stiller

@@ -34,7 +34,6 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
         height={radius * 2}
         style={{ transform: 'rotate(-90deg)' }}
       >
-        {/* Track circle */}
         <circle
           cx={radius}
           cy={radius}
@@ -43,7 +42,6 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
           stroke={trackColor}
           strokeWidth={size}
         />
-        {/* Progress circle */}
         <circle
           cx={radius}
           cy={radius}
@@ -58,7 +56,6 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
         />
       </svg>
       
-      {/* Text content */}
       <div className="circular-progress-text" style={textStyle}>
         {showPercentage && (
           <div className="percentage-text">
